@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Fulfillment Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4f4;--card:#fff;--ink:#14282b;--mute:#5f7074;--line:#dbe2e2;--side:#0f3a40;--acc:#c6f24e;--red:#c42b1c;--grn:#17803d;--blu:#1a5fd0;--yel:#f5b301;box-sizing:border-box}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:500 15.5px/1.45 'Schibsted Grotesk',system-ui,sans-serif;display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.2px}h2{font-size:22px}
+aside{background:var(--side);color:#fff;padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:22px;overflow-y:auto}
+header{display:flex;flex-direction:column;gap:12px}
+header h1{font-size:23px;padding:0 6px}header h1 span{color:var(--acc)}
+.clock{font:700 34px/1 'Schibsted Grotesk';padding:12px 8px;border-top:1px solid #ffffff26;border-bottom:1px solid #ffffff26;font-variant-numeric:tabular-nums}
+.clock:before{content:"Time now";display:block;font:500 12px 'Schibsted Grotesk';color:#a9c4c1;margin-bottom:4px}
+button{font:600 14.5px 'Schibsted Grotesk',sans-serif;border:1px solid transparent;border-radius:6px;padding:9px 15px;cursor:pointer;background:var(--side);color:#fff;min-height:44px}
+button:hover{filter:brightness(1.18)}button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blu);outline-offset:2px}
+button.alt{background:#fff;color:var(--ink);border-color:#bcc8c8}header button.alt{background:transparent;color:#fff;border-color:#ffffff59}
+button.go{background:var(--grn)}button.bad{background:var(--red)}button.bad.alt{background:#fff;color:var(--red);border-color:var(--red)}button.yel{background:var(--yel);color:#14282b}header button.yel{background:var(--acc);color:#0f3a40}
+nav{display:flex;flex-direction:column;gap:2px}
+nav button{background:transparent;color:#bcd3d0;text-align:left;border-radius:6px;padding:11px 12px;border-left:4px solid transparent;font-size:15.5px}
+nav button.on{background:#ffffff1a;color:#fff;border-left-color:var(--acc)}
+main{padding:28px 32px;max-width:1080px;width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:16px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.grow{flex:1}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-weight:600;font-size:12.5px;white-space:nowrap;background:#e6ebea;color:#33474a}
+.p-late{background:#fde4e1;color:#a5210f}.p-risk{background:#fff0cc;color:#855100}.p-ok{background:#d9f3e2;color:#0f5f2d}.p-blk{background:#e8e4fa;color:#45329e}
+.p-pri{background:var(--side);color:var(--acc)}
+.stages{display:flex;margin:4px 0 26px;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
+.stage{flex:1;padding:14px 16px;border-right:1px solid var(--line);position:relative;min-width:0}.stage:last-child{border-right:0}
+.stage span{color:var(--mute);font-size:13.5px}.stage b{font-size:34px;line-height:1.1;display:block;font-variant-numeric:tabular-nums}
+.stage:not(:last-child)::after{content:"";position:absolute;right:-7px;top:50%;width:12px;height:12px;background:#fff;border-top:1px solid var(--line);border-right:1px solid var(--line);transform:translateY(-50%) rotate(45deg);z-index:1}
+.stage:nth-child(5) b,.stage:nth-child(6) b{color:var(--grn)}
+.alert{border:1px solid var(--line);border-left:4px solid var(--red);background:#fff;padding:10px 14px;margin-bottom:8px;border-radius:6px}.alert.w{border-left-color:var(--yel)}
+table{width:100%;border-collapse:collapse}th{color:var(--mute);text-align:left;padding:8px;font-weight:600;font-size:13px;border-bottom:1px solid var(--line)}td{padding:11px 8px;border-bottom:1px solid var(--line);font-size:14.5px;vertical-align:top}tr:last-child td{border-bottom:0}
+.wrap{overflow-x:auto}
+.line{border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:12px;background:#fff}.line.done{background:#eaf7ef;border-color:#b5e2c6}
+.big{font-size:24px;line-height:1.15;font-weight:700}.loc{font-size:26px;font-weight:700;background:var(--acc);color:#0f3a40;padding:4px 14px;border-radius:6px;font-variant-numeric:tabular-nums}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+.opts button{background:#fff;color:var(--ink);border:1px solid #9fb0b0;font-size:17px;min-height:56px}.opts button:hover{background:#eef6d3;border-color:#0f3a40;filter:none}
+.mute{color:var(--mute);font-size:13.5px}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);padding:12px 20px;border-radius:8px;color:#fff;font-weight:600;max-width:90vw;z-index:9;box-shadow:0 6px 20px #0003}
+select,input{font:inherit;padding:8px;border:1px solid #9fb0b0;border-radius:6px;background:#fff;color:var(--ink)}
+@media (max-width:820px){body{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:column;gap:10px;padding:12px}header{flex-direction:row;flex-wrap:wrap;align-items:center}header h1{margin-right:auto}.clock{border:0;padding:0;font-size:24px}.clock:before{display:none}nav{flex-direction:row;overflow-x:auto}nav button{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}nav button.on{border-bottom-color:var(--acc)}main{padding:16px}.stages{flex-wrap:wrap}.stage{flex:1 1 33%;border-bottom:1px solid var(--line)}.stage::after{display:none}}
+</style></head><body>
+<aside><header><h1>Fulfillment <span>Hub</span></h1><div class="clock" id="clock"></div><button class="yel" onclick="adv(30)">+30 min</button><button class="alt" onclick="reset()">Reset demo</button></header>
+<nav id="nav"></nav></aside><main id="app"></main><div id="toast" class="toast" style="display:none"></div>
+<script>
+const CO={Speedy:{cut:900,cost:90,days:1},Metro:{cut:990,cost:65,days:2},Econo:{cut:1050,cost:40,days:4}};
+const ST=['New','Label ready','Picking','Packed','Staged','Shipped'];
+const P=[['Cotton Tee',['Black M','Black L','White M']],['Water Bottle',['500ml Blue','750ml Blue','750ml Steel']],['Yoga Mat',['6mm Purple','6mm Green']],['Desk Lamp',['Warm light','Cool light']],['Backpack',['Grey','Navy']]];
+let S;
+function init(){
+ let n=0,skus=[];P.forEach(([p,vs],pi)=>vs.forEach((v,vi)=>{n++;skus.push({sku:'SKU-'+(100+n),p,v,loc:'ABCDE'[pi]+'-0'+(vi+1),main:[12,3,8,0,9,6,14,2,7,5,10,4][n-1],w2:[0,20,0,15,0,0,0,10,0,0,8,0][n-1],flag:false})}));
+ const cs=['Ananya R','Kiran S','Meera P','Rahul T','Divya K','Farhan A','Latha V','Sam J','Priya N','Gokul B','Isha M','Vijay D','Nisha C','Arjun L','Zoya H','Ravi Q'],chs=['Amazon','Flipkart','Own site'];
+ const ords=cs.map((c,i)=>{const a=skus[(i*3)%12],b=skus[(i*5+2)%12];const items=[{sku:a.sku,q:1+(i%2),got:0}];if(i%3==0&&b.sku!=a.sku)items.push({sku:b.sku,q:1,got:0});
+  return{id:'#'+(4210+i),c,ch:chs[i%3],pri:i%4==1,co:i%4==1?'Speedy':['Metro','Econo','Speedy'][i%3],items,st:i<2?3:i<4?2:i<6?1:0,made:480+i*9,bay:null,blk:null}});
+ ords[0].st=4;ords[0].bay='Speedy';ords[1].st=3;
+ S={t:600,skus,ords,issues:[],xfers:0}}
+const sk=id=>S.skus.find(s=>s.sku==id),fmt=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const due=o=>CO[o.co].cut-30;
+function risk(o){if(o.st>=4)return'ok';const l=due(o)-S.t;return l<=0?'late':l<=60?'risk':'ok'}
+let tab='office',cur=null;
+function toast(m,c){const e=document.getElementById('toast');e.textContent=m;e.style.background=c||'#14213d';e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+function log(o,type,txt){S.issues.push({id:S.issues.length+1,o:o.id,type,txt,t:S.t,open:true})}
+function adv(m){S.t+=m;for(const co in CO)if(S.t>=CO[co].cut&&!S.done?.[co]){S.done=S.done||{};S.done[co]=1;ship(co,true)}render()}
+function ship(co,auto){let miss=0,ok=0;S.ords.forEach(o=>{if(o.co!=co||o.st>=5)return;if(o.st==4){o.st=5;ok++}else{miss++;o.blk='Missed '+co+' pickup';log(o,'Missed pickup',o.id+' was not staged when '+co+' arrived. Rebook courier.')}});toast(co+' picked up '+ok+' box(es)'+(miss?', '+miss+' missed':''),miss?'#d62828':'#1f8a4c')}
+function reset(){S={};init();cur=null;render()}
+function setTab(t){tab=t;cur=null;render()}
+function render(){document.getElementById('clock').textContent='Now '+fmt(S.t);
+ const late=S.ords.filter(o=>risk(o)=='late').length,op=S.issues.filter(i=>i.open).length;
+ document.getElementById('nav').innerHTML=[['office','Office board'],['wh','Warehouse'+(cur?'':'')],['bays','Courier bays'],['stock','Stock'],['issues','Issues'+(op?' ('+op+')':'')]].map(([k,l])=>`<button class="${tab==k?'on':''}" onclick="setTab('${k}')">${l}</button>`).join('');
+ document.getElementById('app').innerHTML={office,wh,bays,stock,issues}[tab]()}
+function office(){
+ const cnt=ST.map((s,i)=>S.ords.filter(o=>o.st==i).length);
+ const al=[];S.ords.forEach(o=>{const r=risk(o);if(o.blk)al.push(`<div class="alert"><b>${o.id}</b> blocked: ${o.blk}</div>`);else if(r=='late')al.push(`<div class="alert"><b>${o.id}</b> ${o.pri?'PRIORITY ':''}is late: still <b>${ST[o.st]}</b>, ${o.co} cutoff was ${fmt(CO[o.co].cut)}</div>`);else if(r=='risk')al.push(`<div class="alert w"><b>${o.id}</b> ${o.pri?'PRIORITY ':''}at risk: <b>${ST[o.st]}</b>, must be staged by ${fmt(due(o))}</div>`)});
+ const rank=o=>({late:0,risk:1,ok:2})[risk(o)]*2+(o.pri?0:1);
+ const rows=[...S.ords].sort((a,b)=>a.st==5?1:b.st==5?-1:rank(a)-rank(b)||due(a)-due(b)).map(o=>{const r=risk(o);return`<tr><td><b>${o.id}</b> ${o.pri?'<span class="pill p-pri">Priority</span>':''}</td><td>${o.c}<div class="mute">${o.ch}</div></td><td>${o.items.map(i=>i.q+'× '+sk(i.sku).p+' '+sk(i.sku).v).join('<br>')}</td><td>${o.co}<div class="mute">stage by ${fmt(due(o))}</div></td><td><span class="pill ${o.blk?'p-blk':(r=='ok'&&o.st<4?'':'p-'+r)}">${o.blk?'Blocked':ST[o.st]}</span></td><td>${o.st==0?`<button onclick="label('${o.id}')">Create label</button>`:o.blk?`<button class="yel" onclick="rebook('${o.id}')">Rebook</button>`:''}</td></tr>`}).join('');
+ return`<div class="stages">${ST.map((s,i)=>`<div class="stage"><span class="mute">${s}</span><b>${cnt[i]}</b></div>`).join('')}</div>
+ <h2>Needs attention</h2><div style="margin:8px 0 16px">${al.join('')||'<div class="card">Nothing is late or blocked. Nice.</div>'}</div>
+ <div class="card"><h2>All orders</h2><div class="wrap"><table><tr><th>Order</th><th>Customer</th><th>Items</th><th>Courier</th><th>Status</th><th></th></tr>${rows}</table></div></div>`}
+function label(id){const o=S.ords.find(x=>x.id==id);o.st=1;toast('Label created for '+id+'. It now appears in the warehouse queue.','#1f8a4c');render()}
+function rebook(id){const o=S.ords.find(x=>x.id==id);o.co='Econo';if(S.t>CO.Econo.cut-30)o.co='Econo';o.blk=null;const i=S.issues.find(x=>x.o==id&&x.open&&x.type=='Missed pickup');if(i)i.open=false;toast(id+' moved to Econo. Cutoff '+fmt(CO.Econo.cut),'#2b59c3');render()}
+function wh(){
+ if(cur){return pick(S.ords.find(o=>o.id==cur))}
+ const q=S.ords.filter(o=>o.st>=1&&o.st<=3&&!o.blk).sort((a,b)=>(b.pri-a.pri)||due(a)-due(b));
+ return`<h2>Work queue</h2><p class="mute">Priority orders come first, then the earliest courier deadline. Tap the top order.</p>`+(q.map((o,i)=>{const r=risk(o);return`<div class="card row"><div class="grow"><div class="big">${o.id} ${o.pri?'<span class="pill p-pri">PRIORITY</span>':''}</div><div class="mute">${o.items.reduce((a,i)=>a+i.q,0)} item(s) · ${o.co} · stage by ${fmt(due(o))} · <span class="pill p-${r}">${ST[o.st]}</span></div></div><button class="${i==0?'go':''}" onclick="cur='${o.id}';render()">${o.st==3?'Stage box':o.st==2?'Continue':'Start picking'}</button></div>`}).join('')||'<div class="card">Queue is empty. Office creates labels to add work.</div>')}
+function pick(o){
+ const all=o.items.every(i=>i.got>=i.q);
+ const lines=o.items.map((it,ix)=>{const s=sk(it.sku),done=it.got>=it.q,need=it.q-it.got;
+  let body;
+  if(done)body=`<div class="big">✔ ${s.p} ${s.v}</div>`;
+  else if(o.st>2)body='';
+  else if(s.main<need)body=`<div class="big">${it.q}× ${s.p} · ${s.v}</div><div class="row" style="margin-top:8px"><span class="pill p-risk">Only ${s.main} in main warehouse</span>${s.w2>=need?`<button class="yel" onclick="xfer('${s.sku}')">Stock is in Warehouse 2: request transfer</button>`:`<button class="bad" onclick="missing('${o.id}','${s.sku}')">Not found: report</button>`}</div>`;
+  else body=`<div class="row"><span class="loc">${s.loc}</span><div class="big grow">${need}× ${s.p}<br>${s.v}</div><button class="bad alt" onclick="missing('${o.id}','${s.sku}')">Can't find it</button></div>
+   <div class="mute" style="margin-top:8px">Tap the variant printed on the item you are holding:</div><div class="opts">${P.find(x=>x[0]==s.p)[1].map(v=>`<button onclick="scan('${o.id}',${ix},'${v}')">${v}</button>`).join('')}</div>`;
+  return`<div class="line ${done?'done':''}">${body}</div>`}).join('');
+ let act='';
+ if(o.st<3)act=all?`<button class="go" onclick="pack('${o.id}')">All picked → Pack &amp; attach label</button>`:'';
+ else act=`<div class="card"><div class="big">Put the box in bay ${o.co}</div><p class="mute">Check the label courier says ${o.co} before placing it.</p><button class="go" onclick="stage('${o.id}')">Box is in the bay</button></div>`;
+ return`<button class="alt"  onclick="cur=null;render()">← Back to queue</button><h2 style="margin:10px 0">${o.id} · ${o.c} ${o.pri?'<span class="pill p-pri">PRIORITY</span>':''}</h2>${o.st<3?lines:''}${act}`}
+function scan(id,ix,v){const o=S.ords.find(x=>x.id==id),it=o.items[ix],s=sk(it.sku);
+ if(v!=s.v){log(o,'Wrong variant','Picker held '+s.p+' '+v+' but order needs '+s.v+'. Caught before packing.');toast('Wrong variant! Needs '+s.v+'. Put it back.','#d62828');return}
+ if(s.main<1){toast('Main stock is 0','#d62828');return}
+ it.got++;s.main--;o.st=2;toast('Correct. '+s.p+' '+v,'#1f8a4c');render()}
+function xfer(sku){const s=sk(sku),n=Math.min(s.w2,10);s.w2-=n;s.main+=n;S.xfers++;toast('Moved '+n+' units of '+s.p+' '+s.v+' to main warehouse','#2b59c3');render()}
+function missing(id,sku){const o=S.ords.find(x=>x.id==id),s=sk(sku);s.flag=true;o.blk='Item '+s.p+' '+s.v+' not found at '+s.loc;log(o,'Missing stock',s.p+' '+s.v+' shows '+s.main+' but was not on shelf '+s.loc+'. Cycle count needed.');cur=null;toast('Reported. Order held and office notified.','#d62828');render()}
+function pack(id){const o=S.ords.find(x=>x.id==id);o.st=3;toast('Packed. Now place in the '+o.co+' bay.');render()}
+function stage(id){const o=S.ords.find(x=>x.id==id);o.st=4;o.bay=o.co;cur=null;toast(id+' staged in '+o.co+' bay','#1f8a4c');render()}
+function bays(){return'<h2 style="margin-bottom:10px">Courier bays</h2>'+Object.keys(CO).map(c=>{const a=S.ords.filter(o=>o.co==c&&o.st<5),st=a.filter(o=>o.st==4),wait=a.filter(o=>o.st<4),gone=S.ords.filter(o=>o.co==c&&o.st==5).length,left=CO[c].cut-S.t;
+ return`<div class="card"><div class="row"><h3 class="grow" style="font-size:26px">${c}</h3><span class="pill ${left<0?'':left<=60?'p-risk':'p-ok'}">${left<0?'Picked up at '+fmt(CO[c].cut):'Pickup '+fmt(CO[c].cut)+' · '+left+' min left'}</span></div>
+ <p><b>${st.length}</b> staged · <b style="color:${wait.length?'var(--red)':'inherit'}">${wait.length}</b> not ready yet · ${gone} shipped · ₹${CO[c].cost}/parcel · ${CO[c].days}-day delivery</p>
+ <div class="mute">Staged: ${st.map(o=>o.id).join(', ')||'none'}</div>${wait.length?`<div class="mute">Still to finish: ${wait.map(o=>o.id+' ('+ST[o.st]+')').join(', ')}</div>`:''}
+ ${left>=0?`<button style="margin-top:8px" class="alt" onclick="ship('${c}');render()" >Courier arrived: hand over</button>`:''}</div>`}).join('')}
+function stock(){const rows=S.skus.map(s=>`<tr><td>${s.sku}</td><td><b>${s.p}</b> ${s.v}</td><td>${s.loc}</td><td>${s.main}</td><td>${s.w2}</td><td>${s.flag?'<span class="pill p-late">Recount</span>':s.main==0?'<span class="pill p-risk">Out in main</span>':s.main<4?'<span class="pill p-risk">Low</span>':''}</td><td>${s.flag?`<button onclick="recount('${s.sku}')">Recount done</button>`:''}</td></tr>`).join('');
+ return`<div class="card"><h2>Stock by location</h2><p class="mute">Orders only ship from main. Warehouse 2 stock must be moved first. ${S.xfers} transfer(s) today.</p><div class="wrap"><table><tr><th>SKU</th><th>Item</th><th>Shelf</th><th>Main</th><th>Warehouse 2</th><th></th><th></th></tr>${rows}</table></div></div>`}
+function recount(sku){const s=sk(sku);s.flag=false;s.main=0;S.ords.forEach(o=>{if(o.blk&&o.blk.includes(s.p+' '+s.v)){o.blk=null}});S.issues.forEach(i=>{if(i.type=='Missing stock'&&i.txt.includes(s.p+' '+s.v))i.open=false});toast('Count set to 0. Blocked orders released for re-check.','#2b59c3');render()}
+function issues(){const a=S.issues.slice().reverse();return`<h2 style="margin-bottom:10px">Issue log</h2>`+(a.map(i=>`<div class="card row"><div class="grow"><span class="pill ${i.open?'p-late':'p-ok'}">${i.open?'Open':'Resolved'}</span> <b>${i.type}</b> · ${i.o} · ${fmt(i.t)}<div>${i.txt}</div></div>${i.open?`<button class="alt"  onclick="S.issues.find(x=>x.id==${i.id}).open=false;render()">Mark resolved</button>`:''}</div>`).join('')||'<div class="card">No problems logged. Anything reported from the warehouse (missing stock, wrong variant, missed pickup) lands here automatically.</div>')}
+init();render();
+</script></body></html>
